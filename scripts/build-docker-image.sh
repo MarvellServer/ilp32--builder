@@ -195,6 +195,7 @@ build_toolchain() {
 		--container-name=build-toolchain--$(date +%H-%M-%S) \
 		--docker-args="\
 			--volumes-from $(get_container_id) \
+			-v ${toolchain_dest_pre}:${toolchain_prefix} \
 			-e DEBUG_TOOLCHAIN_SRC \
 		" \
 		-- ${builder_top}/scripts/build-toolchain.sh \
