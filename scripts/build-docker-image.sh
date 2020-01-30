@@ -186,7 +186,7 @@ build_toolup() {
 	fi
 }
 
-build_toolchain() {
+build_toolchain1() {
 	mkdir -p ${toolchain_dest_pre}
 
 	printenv
@@ -196,6 +196,24 @@ build_toolchain() {
 		--docker-args="\
 			--volumes-from $(get_container_id) \
 			-v ${toolchain_dest_pre}:${toolchain_prefix} \
+			-e DEBUG_TOOLCHAIN_SRC \
+		" \
+		-- ${builder_top}/scripts/build-toolchain.sh \
+			--build-top=${build_top} \
+			--destdir="/" \
+			--prefix=${toolchain_prefix} \
+			-12345678
+}
+
+build_toolchain() {
+	mkdir -p ${toolchain_dest_pre}
+
+	printenv
+	${SCRIPTS_TOP}/enter-toolup.sh \
+		--verbose \
+		--container-name=build-toolchain--$(date +%H-%M-%S) \
+		--docker-args="\
+			-v ${build_top}:${build_top} \
 			-e DEBUG_TOOLCHAIN_SRC \
 		" \
 		-- ${builder_top}/scripts/build-toolchain.sh \
